@@ -147,6 +147,7 @@ private:
 
   friend class processor_t;
   friend class mmu_t;
+  friend class dpi_spike_cosim_t;
 
   // htif
   virtual void reset() override;

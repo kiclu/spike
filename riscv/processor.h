@@ -431,6 +431,7 @@ private:
   friend class clint_t;
   friend class plic_t;
   friend class extension_t;
+  friend class dpi_spike_cosim_t;
 
   void parse_priv_string(const char*);
   void build_opcode_map();
