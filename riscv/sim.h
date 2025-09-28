@@ -28,6 +28,8 @@ using device_factory_sargs_t = std::pair<const device_factory_t*, std::vector<st
 class sim_t : public htif_t, public simif_t
 {
 public:
+  sim_t(const cfg_t* cfg) : cfg(cfg), log_file(nullptr) {}
+
   sim_t(const cfg_t *cfg, bool halted,
         std::vector<std::pair<reg_t, abstract_mem_t*>> mems,
         const std::vector<device_factory_sargs_t>& plugin_device_factories,
