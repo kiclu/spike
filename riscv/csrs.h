@@ -63,7 +63,7 @@ class csr_t {
   state_t* const state;
  public:
   const reg_t address;
- private:
+ protected:
   const unsigned csr_priv;
   const bool csr_read_only;
 
@@ -85,7 +85,7 @@ class basic_csr_t: public csr_t {
 
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   reg_t val;
 };
 
@@ -111,7 +111,7 @@ class pmpaddr_csr_t: public csr_t {
 
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   // Assuming this is configured as TOR, return address for top of
   // range. Also forms bottom-of-range for next-highest pmpaddr
   // register if that one is TOR.
@@ -189,7 +189,7 @@ class epc_csr_t: public csr_t {
   virtual reg_t read() const noexcept override;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   reg_t val;
 };
 
@@ -201,7 +201,7 @@ class tvec_csr_t: public csr_t {
   virtual reg_t read() const noexcept override;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   reg_t val;
 };
 
@@ -228,7 +228,7 @@ class base_status_csr_t: public csr_t {
   const bool has_page;
   const reg_t sstatus_write_mask;
   const reg_t sstatus_read_mask;
- private:
+ protected:
   reg_t compute_sstatus_write_mask() const noexcept;
 };
 
@@ -245,7 +245,7 @@ class vsstatus_csr_t final: public base_status_csr_t {
 
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   reg_t val;
 };
 
@@ -261,7 +261,7 @@ class mstatus_csr_t final: public base_status_csr_t {
 
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   reg_t compute_mstatus_initial_value() const noexcept;
   reg_t val;
 };
@@ -285,7 +285,7 @@ class rv32_low_csr_t: public csr_t {
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
   virtual reg_t written_value() const noexcept override;
- private:
+ protected:
   csr_t_p orig;
 };
 
@@ -297,7 +297,7 @@ class rv32_high_csr_t: public csr_t {
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
   virtual reg_t written_value() const noexcept override;
- private:
+ protected:
   csr_t_p orig;
 };
 
@@ -316,7 +316,7 @@ class sstatus_proxy_csr_t final: public base_status_csr_t {
 
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   mstatus_csr_t_p mstatus;
 };
 
@@ -330,7 +330,7 @@ class sstatus_csr_t: public virtualized_csr_t {
   void dirty(const reg_t dirties);
   // Return true if the specified bits are not 00 (Off)
   bool enabled(const reg_t which);
- private:
+ protected:
   sstatus_proxy_csr_t_p orig_sstatus;
   vsstatus_csr_t_p virt_sstatus;
 };
@@ -349,7 +349,7 @@ class misa_csr_t final: public basic_csr_t {
   bool extension_enabled_const(unsigned char ext) const noexcept;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   const reg_t max_isa;
   const reg_t write_mask;
   reg_t dependency(const reg_t val, const char feature, const char depends_on) const noexcept;
@@ -367,7 +367,7 @@ class mip_or_mie_csr_t: public csr_t {
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override final;
   reg_t val;
- private:
+ protected:
   virtual reg_t write_mask() const noexcept = 0;
 };
 
@@ -381,7 +381,7 @@ class mip_csr_t: public mip_or_mie_csr_t {
 
   // Does not log. Used by external things (clint) that wiggle bits in mip.
   void backdoor_write_with_mask(const reg_t mask, const reg_t val) noexcept;
- private:
+ protected:
   virtual reg_t write_mask() const noexcept override;
 };
 
@@ -390,7 +390,7 @@ typedef std::shared_ptr<mip_csr_t> mip_csr_t_p;
 class mie_csr_t: public mip_or_mie_csr_t {
  public:
   mie_csr_t(processor_t* const proc, const reg_t addr);
- private:
+ protected:
   virtual reg_t write_mask() const noexcept override;
 };
 
@@ -415,7 +415,7 @@ class generic_int_accessor_t {
   reg_t ie_read() const noexcept;
   void ie_write(const reg_t val) noexcept;
   reg_t get_ip_write_mask() { return ip_write_mask; }
- private:
+ protected:
   state_t* const state;
   const reg_t read_mask;
   const reg_t ip_write_mask;
@@ -447,7 +447,7 @@ class mie_proxy_csr_t: public csr_t {
   virtual reg_t read() const noexcept override;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   generic_int_accessor_t_p accr;
 };
 
@@ -466,7 +466,7 @@ class medeleg_csr_t: public basic_csr_t {
   virtual void verify_permissions(insn_t insn, bool write) const override;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   const reg_t hypervisor_exceptions;
 };
 
@@ -484,7 +484,7 @@ class sie_csr_t: public mie_proxy_csr_t {
   virtual reg_t read() const noexcept override;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   reg_t val;
 };
 
@@ -494,7 +494,7 @@ class masked_csr_t: public basic_csr_t {
   masked_csr_t(processor_t* const proc, const reg_t addr, const reg_t mask, const reg_t init);
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   const reg_t mask;
 };
 
@@ -521,7 +521,7 @@ class henvcfg_csr_t final: public envcfg_csr_t {
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
 
- private:
+ protected:
   csr_t_p menvcfg;
 };
 
@@ -533,7 +533,7 @@ class base_atp_csr_t: public basic_csr_t {
   bool satp_valid(reg_t val) const noexcept;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   reg_t compute_new_satp(reg_t val) const noexcept;
 };
 
@@ -551,7 +551,7 @@ class virtualized_satp_csr_t: public virtualized_csr_t {
   virtual void verify_permissions(insn_t insn, bool write) const override;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   satp_csr_t_p orig_satp;
 };
 
@@ -570,7 +570,7 @@ class wide_counter_csr_t: public csr_t {
   void bump(const reg_t howmuch) noexcept;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   bool is_counting_enabled() const noexcept;
   reg_t val;
   bool written;
@@ -588,7 +588,7 @@ class time_counter_csr_t: public csr_t {
 
  protected:
   virtual bool unlogged_write(const reg_t UNUSED val) noexcept override { return false; };
- private:
+ protected:
   reg_t shadow_val;
 };
 
@@ -601,7 +601,7 @@ class proxy_csr_t: public csr_t {
   virtual reg_t read() const noexcept override;
  protected:
   bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   csr_t_p delegate;
 };
 
@@ -612,7 +612,7 @@ class const_csr_t: public csr_t {
   virtual reg_t read() const noexcept override;
  protected:
   bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   const reg_t val;
 };
 
@@ -621,7 +621,7 @@ class counter_proxy_csr_t: public proxy_csr_t {
  public:
   counter_proxy_csr_t(processor_t* const proc, const reg_t addr, csr_t_p delegate);
   virtual void verify_permissions(insn_t insn, bool write) const override;
- private:
+ protected:
   bool myenable(csr_t_p counteren) const noexcept;
 };
 
@@ -643,7 +643,7 @@ class hideleg_csr_t: public masked_csr_t {
  public:
   hideleg_csr_t(processor_t* const proc, const reg_t addr, csr_t_p mideleg);
   virtual reg_t read() const noexcept override;
- private:
+ protected:
   csr_t_p mideleg;
 };
 
@@ -754,7 +754,7 @@ class composite_csr_t: public csr_t {
   virtual reg_t read() const noexcept override;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   csr_t_p upper_csr;
   csr_t_p lower_csr;
   const unsigned upper_lsb;
@@ -777,7 +777,7 @@ class vector_csr_t: public basic_csr_t {
   void write_raw(const reg_t val) noexcept;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   reg_t mask;
 };
 
@@ -801,7 +801,7 @@ class hstateen_csr_t: public basic_csr_t {
   virtual bool unlogged_write(const reg_t val) noexcept override;
 protected:
   uint8_t index;
- private:
+ protected:
   const reg_t mask;
 };
 
@@ -830,7 +830,7 @@ class stimecmp_csr_t: public basic_csr_t {
   virtual void verify_permissions(insn_t insn, bool write) const override;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   reg_t intr_mask;
 };
 
@@ -872,7 +872,7 @@ class sscsrind_reg_csr_t : public csr_t {
   void add_ireg_proxy(const reg_t iselect_val, csr_t_p proxy_csr);
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   csr_t_p iselect;
   std::unordered_map<reg_t, csr_t_p> ireg_proxy;
   csr_t_p get_reg() const noexcept;
@@ -887,7 +887,7 @@ class smcntrpmf_csr_t : public masked_csr_t {
   void reset_prev() noexcept;
  protected:
   virtual bool unlogged_write(const reg_t val) noexcept override;
- private:
+ protected:
   std::optional<reg_t> prev_val;
 };
 

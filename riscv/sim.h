@@ -68,7 +68,7 @@ public:
   static const size_t INSNS_PER_RTC_TICK = 100; // 10 MHz clock for 1 BIPS core
   static const size_t CPU_HZ = 1000000000; // 1GHz CPU
 
-private:
+protected:
   const cfg_t * const cfg;
   std::vector<std::pair<reg_t, abstract_mem_t*>> mems;
   std::vector<processor_t*> procs;

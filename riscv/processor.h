@@ -202,7 +202,7 @@ struct state_t
 
   bool critical_error;
 
- private:
+ protected:
   void csr_init(processor_t* const proc, reg_t max_isa);
 };
 
@@ -241,7 +241,7 @@ class opcode_cache_entry_t {
     return std::tuple(false, nullptr);
   }
 
- private:
+ protected:
   static const size_t associativity = 4;
   insn_bits_t tag[associativity];
   const insn_desc_t* contents[associativity];
@@ -381,7 +381,7 @@ public:
 
   reg_t select_an_interrupt_with_default_priority(reg_t enabled_interrupts) const;
 
-private:
+protected:
   const isa_parser_t isa;
   const cfg_t * const cfg;
 

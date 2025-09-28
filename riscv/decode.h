@@ -207,7 +207,7 @@ public:
     return stack_adj_base + rvc_spimm();
   }
 
-private:
+protected:
   insn_bits_t b;
   uint64_t x(int lo, int len) { return (b >> lo) & ((insn_bits_t(1) << len) - 1); }
   uint64_t xs(int lo, int len) { return int64_t(b) << (64 - lo - len) >> (64 - len); }
@@ -235,7 +235,7 @@ public:
   {
     memset(data, 0, sizeof(data));
   }
-private:
+protected:
   T data[N];
 };
 

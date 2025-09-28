@@ -107,7 +107,7 @@ protected:
   bool s = false;
   bool u = false;
 
-private:
+protected:
   unsigned legalize_mhselect(bool h_enabled) const noexcept;
   bool mode_match(reg_t prv, bool v) const noexcept;
   bool textra_match(processor_t * const proc) const noexcept;
@@ -154,7 +154,7 @@ public:
 
   virtual bool get_dmode() const override { return dmode; }
 
-private:
+protected:
   bool dmode;
 };
 
@@ -165,7 +165,7 @@ public:
 
   virtual std::optional<match_result_t> detect_trap_match(processor_t * const proc, const trap_t& t) noexcept override;
 
-private:
+protected:
   virtual bool simple_match(bool interrupt, reg_t bit) const = 0;
 
 protected:
@@ -179,7 +179,7 @@ public:
   virtual reg_t tdata1_read(const processor_t * const proc) const noexcept override;
   virtual void tdata1_write(processor_t * const proc, const reg_t val, const bool allow_chain) noexcept override;
 
-private:
+protected:
   virtual bool simple_match(bool interrupt, reg_t bit) const override;
   bool nmi;
 };
@@ -189,7 +189,7 @@ public:
   virtual reg_t tdata1_read(const processor_t * const proc) const noexcept override;
   virtual void tdata1_write(processor_t * const proc, const reg_t val, const bool allow_chain) noexcept override;
 
-private:
+protected:
   virtual bool simple_match(bool interrupt, reg_t bit) const override;
 };
 
@@ -216,7 +216,7 @@ public:
   virtual std::optional<match_result_t> detect_memory_access_match(processor_t * const proc,
       operation_t operation, reg_t address, std::optional<reg_t> data) noexcept override;
 
-private:
+protected:
   bool simple_match(unsigned xlen, reg_t value) const;
 
 protected:
@@ -240,7 +240,7 @@ public:
 
   virtual void set_hit(hit_t val) override { hit = val != HIT_FALSE; }
 
-private:
+protected:
   bool hit = false;
   const reg_t maskmax = 0;
 };
@@ -252,7 +252,7 @@ public:
 
   virtual void set_hit(hit_t val) override { hit = val; }
 
-private:
+protected:
   hit_t hit = HIT_FALSE;
 };
 
@@ -269,7 +269,7 @@ public:
   virtual std::optional<match_result_t> detect_icount_fire(processor_t * const proc) noexcept override;
   virtual void detect_icount_decrement(processor_t * const proc) noexcept override;
 
-private:
+protected:
   bool dmode = false;
   bool hit = false;
   unsigned count = 1, count_read_value = 1;
@@ -297,7 +297,7 @@ public:
   std::optional<match_result_t> detect_trap_match(const trap_t& t) noexcept;
 
   processor_t *proc;
-private:
+protected:
   std::vector<trigger_t *> triggers;
 };
 

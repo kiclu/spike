@@ -42,7 +42,7 @@ class tsi_t : public htif_t
 
   int get_ipi_addrs(addr_t *addrs);
 
- private:
+ protected:
   context_t host;
   context_t* target;
   std::deque<uint32_t> in_data;

@@ -31,7 +31,7 @@ class context_t
   void init(void (*func)(void*), void* arg);
   void switch_to();
   static context_t* current();
- private:
+ protected:
   context_t* creator;
   void (*func)(void*);
   void* arg;

@@ -26,7 +26,7 @@ class command_t
   static const size_t MAX_COMMANDS = 256;
   static const size_t MAX_DEVICES = 256;
 
- private:
+ protected:
   memif_t& _memif;
   uint64_t tohost;
   callback_t cb;
@@ -46,7 +46,7 @@ class device_t
   typedef std::function<void(command_t)> command_func_t;
   void register_command(size_t, command_func_t, const char*);
 
- private:
+ protected:
   device_t& operator = (const device_t&); // disallow
   device_t(const device_t&); // disallow
 
@@ -65,7 +65,7 @@ class bcd_t : public device_t
   const char* identity() { return "bcd"; }
   void tick();
 
- private:
+ protected:
   void handle_read(command_t cmd);
   void handle_write(command_t cmd);
 
@@ -79,7 +79,7 @@ class disk_t : public device_t
   ~disk_t();
   const char* identity() { return id.c_str(); }
 
- private:
+ protected:
   struct request_t
   {
     uint64_t addr;
@@ -110,7 +110,7 @@ class device_list_t
   void handle_command(command_t cmd);
   void tick();
 
- private:
+ protected:
   std::vector<device_t*> devices;
   null_device_t null_device;
   size_t num_devices;

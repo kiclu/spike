@@ -49,7 +49,7 @@ class memtracer_list_t : public memtracer_t
   {
     list.push_back(h);
   }
- private:
+ protected:
   std::vector<memtracer_t*> list;
 };
 

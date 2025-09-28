@@ -84,7 +84,7 @@ class htif_t : public chunked_memif_t
   // or end-of-test from HTIF, or an instruction limit.
   bool should_exit() const;
 
- private:
+ protected:
   void parse_arguments(int argc, char ** argv);
   void register_devices();
   void usage(const char * program_name);

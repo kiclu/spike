@@ -84,7 +84,7 @@ class dtm_t : public htif_t
     target->switch_to();
   }
 
- private:
+ protected:
   context_t host;
   context_t* target;
   pthread_t producer;

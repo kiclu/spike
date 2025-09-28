@@ -26,7 +26,7 @@ class htif_pthread_t : public htif_t
   virtual size_t chunk_align() { return 64; }
   virtual size_t chunk_max_size() { return 1024; }
 
- private:
+ protected:
   context_t host;
   context_t* target;
   std::deque<char> th_data;

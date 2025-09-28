@@ -16,7 +16,7 @@ class lfsr_t
   lfsr_t() : reg(1) {}
   lfsr_t(const lfsr_t& lfsr) : reg(lfsr.reg) {}
   uint32_t next() { return reg = (reg>>1)^(-(reg&1) & 0xd0000001); }
- private:
+ protected:
   uint32_t reg;
 };
 
@@ -72,7 +72,7 @@ class fa_cache_sim_t : public cache_sim_t
   fa_cache_sim_t(size_t ways, size_t linesz, const char* name);
   uint64_t* check_tag(uint64_t addr);
   uint64_t victimize(uint64_t addr);
- private:
+ protected:
   static bool cmp(uint64_t a, uint64_t b);
   std::map<uint64_t, uint64_t> tags;
 };

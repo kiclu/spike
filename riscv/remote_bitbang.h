@@ -15,7 +15,7 @@ public:
   // Do a bit of work.
   void tick();
 
-private:
+protected:
   jtag_dtm_t *tap;
 
   int socket_fd;

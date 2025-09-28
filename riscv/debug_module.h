@@ -130,7 +130,7 @@ class debug_module_t : public abstract_device_t
     // Called when one of the attached harts was reset.
     void proc_reset(unsigned id);
 
-  private:
+  protected:
     static const unsigned datasize = 2;
     debug_module_config_t config;
     // Actual size of the program buffer, which is 1 word bigger than we let on

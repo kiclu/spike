@@ -83,7 +83,7 @@ void throw_access_exception(bool virt, reg_t addr, access_type type);
 // an MMU and instruction cache are maintained for simulator performance.
 class mmu_t
 {
-private:
+protected:
   reg_t get_pmlen(bool effective_virt, reg_t effective_priv, xlate_flags_t flags) const;
   mem_access_info_t generate_access_info(reg_t addr, access_type type, xlate_flags_t xlate_flags);
 
@@ -396,7 +396,7 @@ public:
     return target_big_endian? target_endian<T>::to_be(n) : target_endian<T>::to_le(n);
   }
 
-private:
+protected:
   simif_t* sim;
   processor_t* proc;
   memtracer_list_t tracer;

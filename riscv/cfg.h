@@ -29,7 +29,7 @@ public:
     return value;
   }
 
-private:
+protected:
   T value;
   bool was_set;
 };
@@ -54,7 +54,7 @@ public:
     return base + size - 1;
   }
 
-private:
+protected:
   reg_t base;
   reg_t size;
 };

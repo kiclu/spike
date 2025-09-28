@@ -36,7 +36,7 @@ class trap_t
 
   virtual ~trap_t() = default;
 
- private:
+ protected:
   reg_t which;
 };
 
@@ -48,7 +48,7 @@ class insn_trap_t : public trap_t
   bool has_gva() override { return gva; }
   bool has_tval() override { return true; }
   reg_t get_tval() override { return tval; }
- private:
+ protected:
   bool gva;
   reg_t tval;
 };
@@ -65,7 +65,7 @@ class mem_trap_t : public trap_t
   reg_t get_tval2() override { return tval2; }
   bool has_tinst() override { return true; }
   reg_t get_tinst() override { return tinst; }
- private:
+ protected:
   bool gva;
   reg_t tval, tval2, tinst;
 };
