@@ -30,7 +30,7 @@ public:
 
   FILE *get() { return wrapped_file ? wrapped_file.get() : stderr; }
 
-protected:
+public:
   std::unique_ptr<FILE, int(*)(FILE*)> wrapped_file;
 };
 

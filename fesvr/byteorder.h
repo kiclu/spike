@@ -32,7 +32,7 @@ template<typename T> static inline T to_le(T n) { return from_le(n); }
 
 template<typename T> class base_endian {
 
- protected:
+ public:
   T value;
 
   base_endian(T n) : value(n) {}
@@ -52,7 +52,7 @@ template<typename T> class base_endian {
 };
 
 template<typename T> class target_endian : public base_endian<T> {
- protected:
+ public:
   target_endian(T n) : base_endian<T>(n) {}
 
  public:

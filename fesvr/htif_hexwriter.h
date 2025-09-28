@@ -13,7 +13,7 @@ class htif_hexwriter_t : public chunked_memif_t
 public:
   htif_hexwriter_t(size_t b, size_t w, size_t d);
 
-protected:
+public:
   size_t base;
   size_t width;
   size_t depth;

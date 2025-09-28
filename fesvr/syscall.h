@@ -20,7 +20,7 @@ class fds_t
   reg_t alloc(int fd);
   void dealloc(reg_t fd);
   int lookup(reg_t fd);
- protected:
+ public:
   std::vector<int> fds;
 };
 
@@ -32,7 +32,7 @@ class syscall_t : public device_t
 
   void set_chroot(const char* where);
   
- protected:
+ public:
   const char* identity() { return "syscall_proxy"; }
 
   htif_t* htif;

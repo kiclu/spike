@@ -28,7 +28,7 @@ class bus_t : public abstract_device_t {
 
   std::pair<reg_t, abstract_device_t*> find_device(reg_t addr, size_t len);
 
- protected:
+ public:
   std::map<reg_t, abstract_device_t*> devices;
   abstract_device_t* fallback;
 };
@@ -40,7 +40,7 @@ class rom_device_t : public abstract_device_t {
   bool store(reg_t addr, size_t len, const uint8_t* bytes) override;
   reg_t size() override { return data.size(); }
   const std::vector<char>& contents() { return data; }
- protected:
+ public:
   std::vector<char> data;
 };
 
@@ -64,7 +64,7 @@ class mem_t : public abstract_mem_t {
   reg_t size() override { return sz; }
   void dump(std::ostream& o) override;
 
- protected:
+ public:
   bool load_store(reg_t addr, size_t len, uint8_t* bytes, bool store);
 
   std::map<reg_t, char*> sparse_memory_map;
@@ -86,7 +86,7 @@ public:
   bool store(reg_t addr, size_t len, const uint8_t* bytes) override;
   reg_t size() override;
 
-protected:
+public:
   abstract_sim_if_t* external_simulator;
 };
 
@@ -99,7 +99,7 @@ class clint_t : public abstract_device_t {
   void tick(reg_t rtc_ticks) override;
   uint64_t get_mtimecmp(reg_t hartid) { return mtimecmp[hartid]; }
   uint64_t get_mtime() { return mtime; }
- protected:
+ public:
   typedef uint64_t mtime_t;
   typedef uint64_t mtimecmp_t;
   typedef uint32_t msip_t;
@@ -136,7 +136,7 @@ class plic_t : public abstract_device_t, public abstract_interrupt_controller_t 
   bool store(reg_t addr, size_t len, const uint8_t* bytes) override;
   void set_interrupt_level(uint32_t id, int lvl) override;
   reg_t size() override { return PLIC_SIZE; }
- protected:
+ public:
   std::vector<plic_context_t> contexts;
   uint32_t num_ids;
   uint32_t num_ids_word;
@@ -167,7 +167,7 @@ class ns16550_t : public abstract_device_t {
   bool store(reg_t addr, size_t len, const uint8_t* bytes) override;
   void tick(reg_t rtc_ticks) override;
   reg_t size() override { return NS16550_SIZE; }
- protected:
+ public:
   abstract_interrupt_controller_t *intctrl;
   uint32_t interrupt_id;
   uint32_t reg_shift;

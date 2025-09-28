@@ -19,7 +19,7 @@ class extension_t
   virtual void set_debug(bool UNUSED value, const processor_t &) {}
   virtual ~extension_t() = default;
 
- protected:
+ public:
   void illegal_instruction(processor_t &proc);
   void raise_interrupt(processor_t &proc);
   void clear_interrupt(processor_t &proc);

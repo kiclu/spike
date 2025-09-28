@@ -31,7 +31,7 @@ class tsi_t : public htif_t
   bool out_ready() { return true; }
   void tick(bool out_valid, uint32_t out_bits, bool in_ready);
 
- protected:
+ public:
   void reset() override;
   void read_chunk(addr_t taddr, size_t nbytes, void* dst) override;
   void write_chunk(addr_t taddr, size_t nbytes, const void* src) override;
@@ -42,7 +42,7 @@ class tsi_t : public htif_t
 
   int get_ipi_addrs(addr_t *addrs);
 
- protected:
+ public:
   context_t host;
   context_t* target;
   std::deque<uint32_t> in_data;

@@ -137,7 +137,7 @@ public:
 
   const std::set<std::string> &get_extensions() const { return extensions; }
 
-protected:
+public:
   unsigned max_xlen;
   reg_t max_isa;
   reg_t vlen;

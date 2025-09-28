@@ -69,7 +69,7 @@ public:
     return cmemif->get_target_endianness();
   }
 
-protected:
+public:
   chunked_memif_t* cmemif;
 };
 

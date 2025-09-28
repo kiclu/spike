@@ -38,7 +38,7 @@ class jtag_dtm_t
 
     jtag_state_t state() const { return _state; }
 
-  protected:
+  public:
     debug_module_t *dm;
     // The number of Run-Test/Idle cycles required before a DMI access is
     // complete.

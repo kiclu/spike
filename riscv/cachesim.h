@@ -16,7 +16,7 @@ class lfsr_t
   lfsr_t() : reg(1) {}
   lfsr_t(const lfsr_t& lfsr) : reg(lfsr.reg) {}
   uint32_t next() { return reg = (reg>>1)^(-(reg&1) & 0xd0000001); }
- protected:
+ public:
   uint32_t reg;
 };
 
@@ -35,7 +35,7 @@ class cache_sim_t
 
   static cache_sim_t* construct(const char* config, const char* name);
 
- protected:
+ public:
   static const uint64_t VALID = 1ULL << 63;
   static const uint64_t DIRTY = 1ULL << 62;
 
@@ -72,7 +72,7 @@ class fa_cache_sim_t : public cache_sim_t
   fa_cache_sim_t(size_t ways, size_t linesz, const char* name);
   uint64_t* check_tag(uint64_t addr);
   uint64_t victimize(uint64_t addr);
- protected:
+ public:
   static bool cmp(uint64_t a, uint64_t b);
   std::map<uint64_t, uint64_t> tags;
 };
@@ -105,7 +105,7 @@ class cache_memtracer_t : public memtracer_t
     cache->print_stats();
   }
 
- protected:
+ public:
   cache_sim_t* cache;
 };
 

@@ -61,7 +61,7 @@ class dtm_t : public htif_t
     host.switch_to();
   }
 
- protected:
+ public:
   virtual void read_chunk(addr_t taddr, size_t len, void* dst) override;
   virtual void write_chunk(addr_t taddr, size_t len, const void* src) override;
   virtual void clear_chunk(addr_t taddr, size_t len) override;
@@ -84,7 +84,7 @@ class dtm_t : public htif_t
     target->switch_to();
   }
 
- protected:
+ public:
   context_t host;
   context_t* target;
   pthread_t producer;

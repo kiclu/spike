@@ -20,7 +20,7 @@ public:
   std::string rin(std::ostream &sout_); // read input command string
   void wout(); // write output to socket
 
-protected:
+public:
   // the following are needed for command socket interface
   boost::asio::io_service *io_service_ptr;
   boost::asio::ip::tcp::acceptor *acceptor_ptr;

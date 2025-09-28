@@ -111,6 +111,7 @@ class debug_module_t : public abstract_device_t
      * abstract_rti is extra run-test/idle cycles that each abstract command
      * takes to execute. Useful for testing OpenOCD.
      */
+    debug_module_t() = default;
     debug_module_t(simif_t *sim, const debug_module_config_t &config);
     ~debug_module_t();
 
@@ -130,7 +131,7 @@ class debug_module_t : public abstract_device_t
     // Called when one of the attached harts was reset.
     void proc_reset(unsigned id);
 
-  protected:
+  public:
     static const unsigned datasize = 2;
     debug_module_config_t config;
     // Actual size of the program buffer, which is 1 word bigger than we let on

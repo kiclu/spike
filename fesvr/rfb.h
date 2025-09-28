@@ -15,7 +15,7 @@ class rfb_t : public device_t
   std::string name() { return "RISC-V"; }
   const char* identity() { return "rfb"; }
 
- protected:
+ public:
   template <typename T>
   std::string str(T x)
   {

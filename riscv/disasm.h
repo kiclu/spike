@@ -72,7 +72,7 @@ class disasm_insn_t
   uint32_t get_match() const { return match; }
   uint32_t get_mask() const { return mask; }
 
- protected:
+ public:
   uint32_t match;
   uint32_t mask;
   std::vector<const arg_t*> args;
@@ -90,7 +90,7 @@ class disassembler_t
 
   void add_insn(disasm_insn_t* insn);
 
- protected:
+ public:
   static const int HASH_SIZE = 255;
   std::vector<const disasm_insn_t*> chain[HASH_SIZE+1];
 

@@ -52,7 +52,7 @@ class htif_t : public chunked_memif_t
   addr_t get_tohost_addr() { return tohost_addr; }
   addr_t get_fromhost_addr() { return fromhost_addr; }
 
- protected:
+ public:
   virtual void reset() = 0;
 
   virtual void read_chunk(addr_t taddr, size_t len, void* dst) = 0;
@@ -84,7 +84,7 @@ class htif_t : public chunked_memif_t
   // or end-of-test from HTIF, or an instruction limit.
   bool should_exit() const;
 
- protected:
+ public:
   void parse_arguments(int argc, char ** argv);
   void register_devices();
   void usage(const char * program_name);
