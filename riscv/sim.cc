@@ -36,6 +36,15 @@ extern device_factory_t* clint_factory;
 extern device_factory_t* plic_factory;
 extern device_factory_t* ns16550_factory;
 
+sim_t::sim_t(const cfg_t* cfg, const debug_module_config_t& dm_config)
+: cfg(cfg),
+  log_file(nullptr),
+  sout_(nullptr),
+  debug(false),
+  log(false),
+  debug_module(this, dm_config)
+{}
+
 sim_t::sim_t(const cfg_t *cfg, bool halted,
              std::vector<std::pair<reg_t, abstract_mem_t*>> mems,
              const std::vector<device_factory_sargs_t>& plugin_device_factories,
