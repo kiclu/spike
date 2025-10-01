@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: RISC-V ISA Simulator DPI Library
+Description: DPI cosimulation interface for Spike ISA simulator
+URL: https://github.com/riscv/riscv-isa-sim
+Version: @PACKAGE_VERSION@
+Requires: riscv-riscv riscv-fesvr riscv-disasm
+Libs: -L${libdir} -Wl,-rpath,${libdir} -ldpi -lriscv -lfesvr -ldisasm
+Cflags: -I${includedir}
+

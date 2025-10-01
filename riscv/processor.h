@@ -275,7 +275,7 @@ public:
   uint32_t get_id() const { return id; }
   reg_t get_csr(int which, insn_t insn, bool write, bool peek = 0);
   reg_t get_csr(int which) { return get_csr(which, insn_t(0), false, true); }
-  mmu_t* get_mmu() { return mmu; }
+  virtual mmu_t* get_mmu() { return mmu; }
   state_t* get_state() { return &state; }
   unsigned get_xlen() const { return xlen; }
   unsigned paddr_bits() { return isa.get_max_xlen() == 64 ? 56 : 34; }
@@ -441,7 +441,7 @@ public:
   void parse_priv_string(const char*);
   void build_opcode_map();
   void register_base_instructions();
-  insn_func_t decode_insn(insn_t insn);
+  virtual insn_func_t decode_insn(insn_t insn);
 
   // Track repeated executions for processor_t::disasm()
   uint64_t last_pc, last_bits, executions;

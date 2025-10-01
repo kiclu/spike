@@ -1,0 +1,17 @@
+AC_LANG([C++])
+
+AX_BOOST_BASE([1.53])
+AX_BOOST_ASIO
+AX_BOOST_REGEX
+
+AC_CHECK_LIB([boost_system], [main], [], [])
+
+AC_CHECK_LIB([boost_regex], [main], [], [])
+
+AC_SEARCH_LIBS([dlopen], [dl dld], [
+  AC_DEFINE([HAVE_DLOPEN], [], [Dynamic library loading is supported])
+  AC_SUBST([HAVE_DLOPEN], [yes])
+])
+
+AC_CHECK_LIB(pthread, pthread_create, [], [AC_MSG_ERROR([libpthread is required])])
+

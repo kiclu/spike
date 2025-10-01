@@ -1,0 +1,370 @@
+get_insn_list = $(shell grep ^DECLARE_INSN $(1) | sed 's/DECLARE_INSN(\(.*\),.*,.*)/\1/')
+get_opcode = $(shell grep ^DECLARE_INSN.*\\\<$(2)\\\> $(1) | sed 's/DECLARE_INSN(.*,\(.*\),.*)/\1/')
+
+# Default Xcelium root if not set
+XCEL_ROOT ?= $(EDA_CDS_HOME)/$(XCELIUM_VERSION)
+
+dpi_subproject_deps = \
+	fdt \
+	disasm \
+	fesvr \
+	softfloat \
+	riscv \
+
+dpi_CFLAGS = -fPIC -I$(src_dir)/fdt -I$(src_dir)/riscv -I$(XCEL_ROOT)/tools/include -I$(XCEL_ROOT)/tools.lnx86/include -DWORDS_BIGENDIAN=0
+
+dpi_install_shared_lib = yes
+
+dpi_install_pcs = yes
+
+dpi_install_hdrs = \
+	dpi_spike_mem.hpp \
+	dpi_spike_mmu.hpp \
+	dpi_spike_proc.hpp \
+	dpi_spike_sim.hpp \
+
+dpi_precompiled_hdrs = \
+
+dpi_srcs = \
+	$(dpi_gen_srcs) \
+
+# Additional object files from .cpp sources (added after dpi_objs is computed from dpi_srcs)
+dpi_extra_objs = \
+	dpi_spike_mem.o \
+	dpi_spike_mmu.o \
+	dpi_spike_proc.o \
+	dpi_spike_sim.o \
+
+# Add extra dependencies to the shared library target
+libdpi.so : $(dpi_extra_objs)
+
+dpi_test_srcs = \
+
+dpi_gen_hdrs = \
+	dpi_insn_list.h \
+
+
+# Import instruction list from riscv subproject
+dpi_insn_ext_i = \
+	add \
+	addi \
+	addiw \
+	addw \
+	and \
+	andi \
+	auipc \
+	beq \
+	bge \
+	bgeu \
+	blt \
+	bltu \
+	bne \
+	div \
+	divu \
+	divuw \
+	divw \
+	fence \
+	fence_i \
+	jal \
+	jalr \
+	lb \
+	lbu \
+	ld \
+	lh \
+	lhu \
+	lui \
+	lw \
+	lwu \
+	mul \
+	mulh \
+	mulhsu \
+	mulhu \
+	mulw \
+	or \
+	ori \
+	rem \
+	remu \
+	remuw \
+	remw \
+	sb \
+	sd \
+	sh \
+	sll \
+	slli \
+	slliw \
+	sllw \
+	slt \
+	slti \
+	sltiu \
+	sltu \
+	sra \
+	srai \
+	sraiw \
+	sraw \
+	srl \
+	srli \
+	srliw \
+	srlw \
+	sub \
+	subw \
+	sw \
+	xor \
+	xori \
+
+dpi_insn_ext_a = \
+	amoadd_d \
+	amoadd_w \
+	amoand_d \
+	amoand_w \
+	amomax_d \
+	amomax_w \
+	amomaxu_d \
+	amomaxu_w \
+	amomin_d \
+	amomin_w \
+	amominu_d \
+	amominu_w \
+	amoor_d \
+	amoor_w \
+	amoswap_d \
+	amoswap_w \
+	amoxor_d \
+	amoxor_w \
+	lr_d \
+	lr_w \
+	sc_d \
+	sc_w \
+
+dpi_insn_ext_c = \
+	c_add \
+	c_addi \
+	c_addi4spn \
+	c_addw \
+	c_and \
+	c_andi \
+	c_beqz \
+	c_bnez \
+	c_ebreak \
+	c_fld \
+	c_fldsp \
+	c_flw \
+	c_flwsp \
+	c_fsd \
+	c_fsdsp \
+	c_fsw \
+	c_fswsp \
+	c_j \
+	c_jal \
+	c_jalr \
+	c_jr \
+	c_ld \
+	c_ldsp \
+	c_li \
+	c_lui \
+	c_lw \
+	c_lwsp \
+	c_mv \
+	c_or \
+	c_sd \
+	c_sdsp \
+	c_slli \
+	c_srai \
+	c_srli \
+	c_sub \
+	c_subw \
+	c_sw \
+	c_swsp \
+	c_xor \
+
+dpi_insn_ext_f = \
+	fadd_s \
+	fclass_s \
+	fcvt_l_s \
+	fcvt_lu_s \
+	fcvt_s_l \
+	fcvt_s_lu \
+	fcvt_s_w \
+	fcvt_s_wu \
+	fcvt_w_s \
+	fcvt_wu_s \
+	fdiv_s \
+	feq_s \
+	fle_s \
+	fleq_s \
+	flt_s \
+	fltq_s \
+	fmadd_s \
+	fmax_s \
+	fmaxm_s \
+	fmin_s \
+	fminm_s \
+	fmsub_s \
+	fmul_s \
+	fmv_w_x \
+	fmv_x_w \
+	fnmadd_s \
+	fnmsub_s \
+	fround_s \
+	froundnx_s \
+	fsgnj_s \
+	fsgnjn_s \
+	fsgnjx_s \
+	fsqrt_s \
+	fsub_s \
+
+dpi_insn_ext_d = \
+	fadd_d \
+	fclass_d \
+	fcvt_d_l \
+	fcvt_d_lu \
+	fcvt_d_s \
+	fcvt_d_w \
+	fcvt_d_wu \
+	fcvt_l_d \
+	fcvt_lu_d \
+	fcvt_s_d \
+	fcvt_w_d \
+	fcvt_wu_d \
+	fcvtmod_w_d \
+	fdiv_d \
+	feq_d \
+	fle_d \
+	fleq_d \
+	flt_d \
+	fltq_d \
+	fmadd_d \
+	fmax_d \
+	fmaxm_d \
+	fmin_d \
+	fminm_d \
+	fmsub_d \
+	fmul_d \
+	fmv_d_x \
+	fmv_x_d \
+	fnmadd_d \
+	fnmsub_d \
+	fround_d \
+	froundnx_d \
+	fsgnj_d \
+	fsgnjn_d \
+	fsgnjx_d \
+	fsqrt_d \
+	fsub_d \
+
+dpi_insn_priv = \
+	csrrc \
+	csrrci \
+	csrrs \
+	csrrsi \
+	csrrw \
+	csrrwi \
+	dret \
+	ebreak \
+	ecall \
+	mret \
+	sfence_vma \
+	sret \
+	wfi \
+
+dpi_insn_ext_v = \
+	vaaddu_vv vaaddu_vx vaadd_vv vaadd_vx vadc_vim vadc_vvm vadc_vxm \
+	vadd_vi vadd_vv vadd_vx vaesdf_vs vaesdf_vv vaesdm_vs vaesdm_vv \
+	vaesef_vs vaesef_vv vaesem_vs vaesem_vv vaeskf1_vi vaeskf2_vi vaesz_vs \
+	vandn_vv vandn_vx vand_vi vand_vv vand_vx vasubu_vv vasubu_vx \
+	vasub_vv vasub_vx vbrev8_v vbrev_v vclmulh_vv vclmulh_vx vclmul_vv \
+	vclmul_vx vclz_v vcompress_vm vcpop_m vcpop_v vctz_v vdivu_vv vdivu_vx \
+	vdiv_vv vdiv_vx vfadd_vf vfadd_vv vfbdot_vv vfclass_v vfcvt_f_xu_v \
+	vfcvt_f_x_v vfcvt_rtz_x_f_v vfcvt_rtz_xu_f_v vfcvt_x_f_v vfcvt_xu_f_v \
+	vfdiv_vf vfdiv_vv vfirst_m vfmacc_vf vfmacc_vv vfmadd_vf vfmadd_vv \
+	vfmax_vf vfmax_vv vfmerge_vfm vfmin_vf vfmin_vv vfmsac_vf vfmsac_vv \
+	vfmsub_vf vfmsub_vv vfmul_vf vfmul_vv vfmv_f_s vfmv_s_f vfmv_v_f \
+	vfncvtbf16_f_f_w vfncvt_f_f_w vfncvt_f_xu_w vfncvt_f_x_w vfncvt_rod_f_f_w \
+	vfncvt_rtz_x_f_w vfncvt_rtz_xu_f_w vfncvt_x_f_w vfncvt_xu_f_w vfnmacc_vf \
+	vfnmacc_vv vfnmadd_vf vfnmadd_vv vfnmsac_vf vfnmsac_vv vfnmsub_vf \
+	vfnmsub_vv vfrdiv_vf vfrec7_v vfredmax_vs vfredmin_vs vfredosum_vs \
+	vfredusum_vs vfrsqrt7_v vfrsub_vf vfsgnjn_vf vfsgnjn_vv vfsgnj_vf \
+	vfsgnj_vv vfsgnjx_vf vfsgnjx_vv vfslide1down_vf vfslide1up_vf vfsqrt_v \
+	vfsub_vf vfsub_vv vfwadd_vf vfwadd_vv vfwadd_wf vfwadd_wv vfwbdot_vv \
+	vfwcvtbf16_f_f_v vfwcvt_f_f_v vfwcvt_f_xu_v vfwcvt_f_x_v vfwcvt_rtz_x_f_v \
+	vfwcvt_rtz_xu_f_v vfwcvt_x_f_v vfwcvt_xu_f_v vfwldot_vv vfwmaccbf16_vf \
+	vfwmaccbf16_vv vfwmacc_vf vfwmacc_vv vfwmsac_vf vfwmsac_vv vfwmul_vf \
+	vfwmul_vv vfwnmacc_vf vfwnmacc_vv vfwnmsac_vf vfwnmsac_vv vfwredosum_vs \
+	vfwredusum_vs vfwsub_vf vfwsub_vv vfwsub_wf vfwsub_wv vghsh_vv vgmul_vv \
+	vid_v viota_m vl1re16_v vl1re32_v vl1re64_v vl1re8_v vl2re16_v vl2re32_v \
+	vl2re64_v vl2re8_v vl4re16_v vl4re32_v vl4re64_v vl4re8_v vl8re16_v \
+	vl8re32_v vl8re64_v vl8re8_v vle16ff_v vle16_v vle32ff_v vle32_v vle64ff_v \
+	vle64_v vle8ff_v vle8_v vlm_v vloxei16_v vloxei32_v vloxei64_v vloxei8_v \
+	vlse16_v vlse32_v vlse64_v vlse8_v vluxei16_v vluxei32_v vluxei64_v \
+	vluxei8_v vmacc_vv vmacc_vx vmadc_vi vmadc_vim vmadc_vv vmadc_vvm vmadc_vx \
+	vmadc_vxm vmadd_vv vmadd_vx vmand_mm vmandn_mm vmaxu_vv vmaxu_vx vmax_vv \
+	vmax_vx vmerge_vim vmerge_vvm vmerge_vxm vmfeq_vf vmfeq_vv vmfge_vf \
+	vmfgt_vf vmfle_vf vmfle_vv vmflt_vf vmflt_vv vmfne_vf vmfne_vv vminu_vv \
+	vminu_vx vmin_vv vmin_vx vmnand_mm vmnor_mm vmor_mm vmorn_mm vmsbc_vv \
+	vmsbc_vvm vmsbc_vx vmsbc_vxm vmsbf_m vmseq_vi vmseq_vv vmseq_vx vmsgtu_vi \
+	vmsgtu_vx vmsgt_vi vmsgt_vx vmsif_m vmsleu_vi vmsleu_vv vmsleu_vx vmsle_vi \
+	vmsle_vv vmsle_vx vmsltu_vv vmsltu_vx vmslt_vv vmslt_vx vmsne_vi vmsne_vv \
+	vmsne_vx vmsof_m vmulhsu_vv vmulhsu_vx vmulhu_vv vmulhu_vx vmulh_vv \
+	vmulh_vx vmul_vv vmul_vx vmv1r_v vmv2r_v vmv4r_v vmv8r_v vmv_s_x \
+	vmv_v_i vmv_v_v vmv_v_x vmv_x_s vmxnor_mm vmxor_mm vnclipu_wi vnclipu_wv \
+	vnclipu_wx vnclip_wi vnclip_wv vnclip_wx vnmsac_vv vnmsac_vx vnmsub_vv \
+	vnmsub_vx vnsra_wi vnsra_wv vnsra_wx vnsrl_wi vnsrl_wv vnsrl_wx vor_vi \
+	vor_vv vor_vx vqbdots_vv vqbdotu_vv vqdotsu_vv vqdotsu_vx \
+	vqdotus_vx vqdotu_vv vqdotu_vx vqdot_vv vqdot_vx vqldots_vv vqldotu_vv \
+	vredand_vs vredmaxu_vs vredmax_vs vredminu_vs vredmin_vs vredor_vs \
+	vredsum_vs vredxor_vs vremu_vv vremu_vx vrem_vv vrem_vx vrev8_v \
+	vrgatherei16_vv vrgather_vi vrgather_vv vrgather_vx vrol_vv vrol_vx \
+	vror_vi vror_vv vror_vx vrsub_vi vrsub_vx vs1r_v vs2r_v vs4r_v vs8r_v \
+	vsaddu_vi vsaddu_vv vsaddu_vx vsadd_vi vsadd_vv vsadd_vx vsbc_vvm vsbc_vxm \
+	vse16_v vse32_v vse64_v vse8_v vsetivli vsetvl vsetvli vsext_vf2 vsext_vf4 \
+	vsext_vf8 vsha2ch_vv vsha2cl_vv vsha2ms_vv vslide1down_vx vslide1up_vx \
+	vslidedown_vi vslidedown_vx vslideup_vi vslideup_vx vsll_vi vsll_vv vsll_vx \
+	vsm3c_vi vsm3me_vv vsm4k_vi vsm4r_vs vsm4r_vv vsmul_vv vsmul_vx vsm_v \
+	vsoxei16_v vsoxei32_v vsoxei64_v vsoxei8_v vsra_vi vsra_vv vsra_vx vsrl_vi \
+	vsrl_vv vsrl_vx vsse16_v vsse32_v vsse64_v vsse8_v vssra_vi vssra_vv \
+	vssra_vx vssrl_vi vssrl_vv vssrl_vx vssubu_vv vssubu_vx vssub_vv vssub_vx \
+	vsub_vv vsub_vx vsuxei16_v vsuxei32_v vsuxei64_v vsuxei8_v vwaddu_vv \
+	vwaddu_vx vwaddu_wv vwaddu_wx vwadd_vv vwadd_vx vwadd_wv vwadd_wx \
+	vwmaccsu_vv vwmaccsu_vx vwmaccus_vx vwmaccu_vv vwmaccu_vx vwmacc_vv \
+	vwmacc_vx vwmulsu_vv vwmulsu_vx vwmulu_vv vwmulu_vx vwmul_vv vwmul_vx \
+	vwredsumu_vs vwredsum_vs vwsll_vi vwsll_vv vwsll_vx vwsubu_vv vwsubu_vx \
+	vwsubu_wv vwsubu_wx vwsub_vv vwsub_vx vwsub_wv vwsub_wx vxor_vi vxor_vv \
+	vxor_vx vzext_vf2 vzext_vf4 vzext_vf8 \
+
+# Build the complete instruction list
+dpi_insn_list = \
+	$(dpi_insn_ext_i) \
+	$(dpi_insn_ext_a) \
+	$(dpi_insn_ext_c) \
+	$(dpi_insn_ext_f) \
+	$(dpi_insn_ext_d) \
+	$(dpi_insn_ext_v) \
+	$(dpi_insn_priv) \
+
+dpi_gen_srcs = $(addprefix dpi_,$(addsuffix .cc,$(dpi_insn_list)))
+
+dpi_insn_list.h: $(src_dir)/dpi/dpi.mk.in
+	for insn in $(foreach insn,$(dpi_insn_list),$(subst .,_,$(insn))) ; do \
+		printf 'DEFINE_INSN(%s)\n' "$${insn}" ; \
+	done > $@.tmp
+	mv $@.tmp $@
+
+$(dpi_gen_srcs): dpi_%.cc: $(src_dir)/riscv/insns/%.h $(src_dir)/dpi/dpi_spike_insn_template.cpp
+	sed 's/NAME/$(subst dpi_,,$(subst .cc,,$@))/' $(src_dir)/dpi/dpi_spike_insn_template.cpp | sed 's/OPCODE/$(call get_opcode,$(src_dir)/riscv/encoding.h,$(subst dpi_,,$(subst .cc,,$@)))/' > $@
+
+dpi_junk = \
+	$(dpi_gen_srcs) \
+	$(dpi_extra_objs) \
+
+# Explicit rules for .cpp files (build system expects .cc by default)
+dpi_spike_mem.o: $(src_dir)/dpi/dpi_spike_mem.cpp $(dpi_gen_hdrs)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(dpi_CFLAGS) -c $< -o $@
+
+dpi_spike_mmu.o: $(src_dir)/dpi/dpi_spike_mmu.cpp $(dpi_gen_hdrs)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(dpi_CFLAGS) -c $< -o $@
+
+dpi_spike_proc.o: $(src_dir)/dpi/dpi_spike_proc.cpp $(dpi_gen_hdrs)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(dpi_CFLAGS) -c $< -o $@
+
+dpi_spike_sim.o: $(src_dir)/dpi/dpi_spike_sim.cpp $(dpi_gen_hdrs)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(dpi_CFLAGS) -c $< -o $@
+
