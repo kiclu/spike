@@ -22,6 +22,8 @@ public:
 
   inline dpi_spike_proc_t* get_core(size_t i) { return static_cast<dpi_spike_proc_t*>(procs.at(i)); }
 
+  inline dpi_spike_mmu_t* get_mmu() { return debug_mmu; }
+
 public:
   dpi_spike_mmu_t* debug_mmu;
 };

@@ -11,7 +11,7 @@ dpi_subproject_deps = \
 	softfloat \
 	riscv \
 
-dpi_CFLAGS = -fPIC -I$(src_dir)/fdt -I$(src_dir)/riscv -I$(XCEL_ROOT)/tools/include -I$(XCEL_ROOT)/tools.lnx86/include -DWORDS_BIGENDIAN=0
+dpi_CFLAGS = -fPIC -I. -I$(src_dir)/fdt -I$(src_dir)/riscv -I$(XCEL_ROOT)/tools/include -I$(XCEL_ROOT)/tools.lnx86/include -DWORDS_BIGENDIAN=0
 
 dpi_install_shared_lib = yes
 
@@ -43,8 +43,6 @@ dpi_test_srcs = \
 dpi_gen_hdrs = \
 	dpi_insn_list.h \
 
-
-# Import instruction list from riscv subproject
 dpi_insn_ext_i = \
 	add \
 	addi \
@@ -59,12 +57,6 @@ dpi_insn_ext_i = \
 	blt \
 	bltu \
 	bne \
-	div \
-	divu \
-	divuw \
-	divw \
-	fence \
-	fence_i \
 	jal \
 	jalr \
 	lb \
@@ -75,17 +67,8 @@ dpi_insn_ext_i = \
 	lui \
 	lw \
 	lwu \
-	mul \
-	mulh \
-	mulhsu \
-	mulhu \
-	mulw \
 	or \
 	ori \
-	rem \
-	remu \
-	remuw \
-	remw \
 	sb \
 	sd \
 	sh \
@@ -110,6 +93,8 @@ dpi_insn_ext_i = \
 	sw \
 	xor \
 	xori \
+	fence \
+	fence_i \
 
 dpi_insn_ext_a = \
 	amoadd_d \
@@ -117,13 +102,13 @@ dpi_insn_ext_a = \
 	amoand_d \
 	amoand_w \
 	amomax_d \
-	amomax_w \
 	amomaxu_d \
 	amomaxu_w \
+	amomax_w \
 	amomin_d \
-	amomin_w \
 	amominu_d \
 	amominu_w \
+	amomin_w \
 	amoor_d \
 	amoor_w \
 	amoswap_d \
@@ -157,24 +142,39 @@ dpi_insn_ext_c = \
 	c_jal \
 	c_jalr \
 	c_jr \
-	c_ld \
-	c_ldsp \
 	c_li \
 	c_lui \
+	c_ld \
+	c_ldsp \
 	c_lw \
 	c_lwsp \
 	c_mv \
 	c_or \
-	c_sd \
-	c_sdsp \
 	c_slli \
 	c_srai \
 	c_srli \
 	c_sub \
 	c_subw \
+	c_sd \
+	c_sdsp \
 	c_sw \
 	c_swsp \
 	c_xor \
+
+dpi_insn_ext_m = \
+	div \
+	divu \
+	divuw \
+	divw \
+	mul \
+	mulh \
+	mulhsu \
+	mulhu \
+	mulw \
+	rem \
+	remu \
+	remuw \
+	remw \
 
 dpi_insn_ext_f = \
 	fadd_s \
@@ -190,33 +190,39 @@ dpi_insn_ext_f = \
 	fdiv_s \
 	feq_s \
 	fle_s \
-	fleq_s \
 	flt_s \
-	fltq_s \
+	flw \
 	fmadd_s \
 	fmax_s \
-	fmaxm_s \
 	fmin_s \
-	fminm_s \
 	fmsub_s \
 	fmul_s \
 	fmv_w_x \
 	fmv_x_w \
 	fnmadd_s \
 	fnmsub_s \
-	fround_s \
-	froundnx_s \
 	fsgnj_s \
 	fsgnjn_s \
 	fsgnjx_s \
 	fsqrt_s \
 	fsub_s \
+	fsw \
+
+dpi_insn_ext_f_zfa= \
+	fli_s \
+	fmaxm_s \
+	fminm_s \
+	fround_s \
+	froundnx_s \
+	fleq_s \
+	fltq_s
 
 dpi_insn_ext_d = \
 	fadd_d \
 	fclass_d \
 	fcvt_d_l \
 	fcvt_d_lu \
+	fcvt_d_q \
 	fcvt_d_s \
 	fcvt_d_w \
 	fcvt_d_wu \
@@ -225,31 +231,628 @@ dpi_insn_ext_d = \
 	fcvt_s_d \
 	fcvt_w_d \
 	fcvt_wu_d \
-	fcvtmod_w_d \
 	fdiv_d \
 	feq_d \
+	fld \
 	fle_d \
-	fleq_d \
 	flt_d \
-	fltq_d \
 	fmadd_d \
 	fmax_d \
-	fmaxm_d \
 	fmin_d \
-	fminm_d \
 	fmsub_d \
 	fmul_d \
 	fmv_d_x \
 	fmv_x_d \
 	fnmadd_d \
 	fnmsub_d \
-	fround_d \
-	froundnx_d \
+	fsd \
 	fsgnj_d \
 	fsgnjn_d \
 	fsgnjx_d \
 	fsqrt_d \
 	fsub_d \
+
+dpi_insn_ext_d_zfa = \
+	fli_d \
+	fmaxm_d \
+	fminm_d \
+	fround_d \
+	froundnx_d \
+	fmvh_x_d \
+	fmvp_d_x \
+	fcvtmod_w_d \
+	fleq_d \
+	fltq_d
+
+dpi_insn_ext_zfh = \
+	fadd_h \
+	fclass_h \
+	fcvt_l_h \
+	fcvt_lu_h \
+	fcvt_d_h \
+	fcvt_h_d \
+	fcvt_h_l \
+	fcvt_h_lu \
+	fcvt_h_q \
+	fcvt_h_s \
+	fcvt_h_w \
+	fcvt_h_wu \
+	fcvt_q_h \
+	fcvt_s_h \
+	fcvt_w_h \
+	fcvt_wu_h \
+	fdiv_h \
+	feq_h \
+	fle_h \
+	flh \
+	flt_h \
+	fmadd_h \
+	fmax_h \
+	fmin_h \
+	fmsub_h \
+	fmul_h \
+	fmv_h_x \
+	fmv_x_h \
+	fnmadd_h \
+	fnmsub_h \
+	fsgnj_h \
+	fsgnjn_h \
+	fsgnjx_h \
+	fsh \
+	fsqrt_h \
+	fsub_h \
+
+dpi_insn_ext_zfh_zfa = \
+	fli_h \
+	fmaxm_h \
+	fminm_h \
+	fround_h \
+	froundnx_h \
+	fleq_h \
+	fltq_h
+
+dpi_insn_ext_q = \
+	fadd_q \
+	fclass_q \
+	fcvt_l_q \
+	fcvt_lu_q \
+	fcvt_q_d \
+	fcvt_q_l \
+	fcvt_q_lu \
+	fcvt_q_s \
+	fcvt_q_w \
+	fcvt_q_wu \
+	fcvt_s_q \
+	fcvt_w_q \
+	fcvt_wu_q \
+	fdiv_q \
+	feq_q \
+	fle_q \
+	flq \
+	flt_q \
+	fmadd_q \
+	fmax_q \
+	fmin_q \
+	fmsub_q \
+	fmul_q \
+	fnmadd_q \
+	fnmsub_q \
+	fsgnj_q \
+	fsgnjn_q \
+	fsgnjx_q \
+	fsq \
+	fsqrt_q \
+	fsub_q \
+
+dpi_insn_ext_q_zfa = \
+	fli_q \
+	fmaxm_q \
+	fminm_q \
+	fround_q \
+	froundnx_q \
+	fmvh_x_q \
+	fmvp_q_x \
+	fleq_q \
+	fltq_q
+
+dpi_insn_ext_b = \
+	add_uw \
+	andn \
+	sh1add \
+	sh1add_uw \
+	sh2add \
+	sh2add_uw \
+	sh3add \
+	sh3add_uw \
+	clmul \
+	clmulh \
+	clmulr \
+	clz \
+	clzw \
+	ctz \
+	ctzw \
+	gorci \
+	grevi \
+	max \
+	maxu \
+	min \
+	minu \
+	orn \
+	pack \
+	packh \
+	packw \
+	cpop \
+	cpopw \
+	rol \
+	rolw \
+	ror \
+	rori \
+	roriw \
+	rorw \
+	bclr \
+	bclri \
+	bext \
+	bexti \
+	binv \
+	binvi \
+	bset \
+	bseti \
+	sext_b \
+	sext_h \
+	shfli \
+	slli_uw \
+	unshfli \
+	xnor \
+	xperm4 \
+	xperm8 \
+
+# Scalar Crypto ISE
+dpi_insn_ext_k = \
+       aes32dsi \
+       aes32dsmi \
+       aes32esi \
+       aes32esmi \
+       aes64ds \
+       aes64dsm \
+       aes64es \
+       aes64esm \
+       aes64ks1i \
+       aes64ks2 \
+       aes64im \
+       sha256sig0 \
+       sha256sig1 \
+       sha256sum0 \
+       sha256sum1 \
+       sha512sig0 \
+       sha512sig0h \
+       sha512sig0l \
+       sha512sig1 \
+       sha512sig1h \
+       sha512sig1l \
+       sha512sum0 \
+       sha512sum0r \
+       sha512sum1 \
+       sha512sum1r \
+       sm3p0 \
+       sm3p1 \
+       sm4ed \
+       sm4ks
+
+dpi_insn_ext_v_alu_int = \
+	vaadd_vv \
+	vaaddu_vv \
+	vaadd_vx \
+	vaaddu_vx \
+	vadc_vim \
+	vadc_vvm \
+	vadc_vxm \
+	vadd_vi \
+	vadd_vv \
+	vadd_vx \
+	vand_vi \
+	vand_vv \
+	vand_vx \
+	vasub_vv \
+	vasubu_vv \
+	vasub_vx \
+	vasubu_vx \
+	vcompress_vm \
+	vcpop_m \
+	vdiv_vv \
+	vdiv_vx \
+	vdivu_vv \
+	vdivu_vx \
+	vid_v \
+	viota_m \
+	vmacc_vv \
+	vmacc_vx \
+	vmadc_vv \
+	vmadc_vx \
+	vmadc_vi \
+	vmadc_vim \
+	vmadc_vvm \
+	vmadc_vxm \
+	vmadd_vv \
+	vmadd_vx \
+	vmand_mm \
+	vmandn_mm \
+	vmax_vv \
+	vmax_vx \
+	vmaxu_vv \
+	vmaxu_vx \
+	vmerge_vim \
+	vmerge_vvm \
+	vmerge_vxm \
+	vfirst_m \
+	vmin_vv \
+	vmin_vx \
+	vminu_vv \
+	vminu_vx \
+	vmnand_mm \
+	vmnor_mm \
+	vmor_mm \
+	vmorn_mm \
+	vmsbc_vv \
+	vmsbc_vx \
+	vmsbc_vvm \
+	vmsbc_vxm \
+	vmsbf_m \
+	vmseq_vi \
+	vmseq_vv \
+	vmseq_vx \
+	vmsgt_vi \
+	vmsgt_vx \
+	vmsgtu_vi \
+	vmsgtu_vx \
+	vmsif_m \
+	vmsle_vi \
+	vmsle_vv \
+	vmsle_vx \
+	vmsleu_vi \
+	vmsleu_vv \
+	vmsleu_vx \
+	vmslt_vv \
+	vmslt_vx \
+	vmsltu_vv \
+	vmsltu_vx \
+	vmsne_vi \
+	vmsne_vv \
+	vmsne_vx \
+	vmsof_m \
+	vmul_vv \
+	vmul_vx \
+	vmulh_vv \
+	vmulh_vx \
+	vmulhsu_vv \
+	vmulhsu_vx \
+	vmulhu_vv \
+	vmulhu_vx \
+	vmv_s_x \
+	vmv_v_i \
+	vmv_v_v \
+	vmv_v_x \
+	vmv_x_s \
+	vmv1r_v \
+	vmv2r_v \
+	vmv4r_v \
+	vmv8r_v \
+	vmxnor_mm \
+	vmxor_mm \
+	vnclip_wi \
+	vnclip_wv \
+	vnclip_wx \
+	vnclipu_wi \
+	vnclipu_wv \
+	vnclipu_wx \
+	vnmsac_vv \
+	vnmsac_vx \
+	vnmsub_vv \
+	vnmsub_vx \
+	vnsra_wi \
+	vnsra_wv \
+	vnsra_wx \
+	vnsrl_wi \
+	vnsrl_wv \
+	vnsrl_wx \
+	vor_vi \
+	vor_vv \
+	vor_vx \
+	vredand_vs \
+	vredmax_vs \
+	vredmaxu_vs \
+	vredmin_vs \
+	vredminu_vs \
+	vredor_vs \
+	vredsum_vs \
+	vredxor_vs \
+	vrem_vv \
+	vrem_vx \
+	vremu_vv \
+	vremu_vx \
+	vrgather_vi \
+	vrgather_vv \
+	vrgather_vx \
+	vrgatherei16_vv \
+	vrsub_vi \
+	vrsub_vx \
+	vsadd_vi \
+	vsadd_vv \
+	vsadd_vx \
+	vsaddu_vi \
+	vsaddu_vv \
+	vsaddu_vx \
+	vsbc_vvm \
+	vsbc_vxm \
+	vsext_vf2 \
+	vsext_vf4 \
+	vsext_vf8 \
+	vslide1down_vx \
+	vslide1up_vx \
+	vslidedown_vi \
+	vslidedown_vx \
+	vslideup_vi \
+	vslideup_vx \
+	vsll_vi \
+	vsll_vv \
+	vsll_vx \
+	vsmul_vv \
+	vsmul_vx \
+	vsra_vi \
+	vsra_vv \
+	vsra_vx \
+	vsrl_vi \
+	vsrl_vv \
+	vsrl_vx \
+	vssra_vi \
+	vssra_vv \
+	vssra_vx \
+	vssrl_vi \
+	vssrl_vv \
+	vssrl_vx \
+	vssub_vv \
+	vssub_vx \
+	vssubu_vv \
+	vssubu_vx \
+	vsub_vv \
+	vsub_vx \
+	vwadd_vv \
+	vwadd_vx \
+	vwadd_wv \
+	vwadd_wx \
+	vwaddu_vv \
+	vwaddu_vx \
+	vwaddu_wv \
+	vwaddu_wx \
+	vwmacc_vv \
+	vwmacc_vx \
+	vwmaccsu_vv \
+	vwmaccsu_vx \
+	vwmaccu_vv \
+	vwmaccu_vx \
+	vwmaccus_vx \
+	vwmul_vv \
+	vwmul_vx \
+	vwmulsu_vv \
+	vwmulsu_vx \
+	vwmulu_vv \
+	vwmulu_vx \
+	vwredsum_vs \
+	vwredsumu_vs \
+	vwsub_vv \
+	vwsub_vx \
+	vwsub_wv \
+	vwsub_wx \
+	vwsubu_vv \
+	vwsubu_vx \
+	vwsubu_wv \
+	vwsubu_wx \
+	vxor_vi \
+	vxor_vv \
+	vxor_vx \
+	vzext_vf2 \
+	vzext_vf4 \
+	vzext_vf8 \
+
+dpi_insn_ext_v_alu_fp = \
+	vfadd_vf \
+	vfadd_vv \
+	vfclass_v \
+	vfcvt_f_x_v \
+	vfcvt_f_xu_v \
+	vfcvt_rtz_x_f_v \
+	vfcvt_rtz_xu_f_v \
+	vfcvt_x_f_v \
+	vfcvt_xu_f_v \
+	vfdiv_vf \
+	vfdiv_vv \
+	vfmacc_vf \
+	vfmacc_vv \
+	vfmadd_vf \
+	vfmadd_vv \
+	vfmax_vf \
+	vfmax_vv \
+	vfmerge_vfm \
+	vfmin_vf \
+	vfmin_vv \
+	vfmsac_vf \
+	vfmsac_vv \
+	vfmsub_vf \
+	vfmsub_vv \
+	vfmul_vf \
+	vfmul_vv \
+	vfmv_f_s \
+	vfmv_s_f \
+	vfmv_v_f \
+	vfncvt_f_f_w \
+	vfncvt_f_x_w \
+	vfncvt_f_xu_w \
+	vfncvt_rod_f_f_w \
+	vfncvt_rtz_x_f_w \
+	vfncvt_rtz_xu_f_w \
+	vfncvt_x_f_w \
+	vfncvt_xu_f_w \
+	vfnmacc_vf \
+	vfnmacc_vv \
+	vfnmadd_vf \
+	vfnmadd_vv \
+	vfnmsac_vf \
+	vfnmsac_vv \
+	vfnmsub_vf \
+	vfnmsub_vv \
+	vfrdiv_vf \
+	vfredmax_vs \
+	vfredmin_vs \
+	vfredosum_vs \
+	vfredusum_vs \
+	vfrec7_v \
+	vfrsub_vf \
+	vfrsqrt7_v \
+	vfsgnj_vf \
+	vfsgnj_vv \
+	vfsgnjn_vf \
+	vfsgnjn_vv \
+	vfsgnjx_vf \
+	vfsgnjx_vv \
+	vfsqrt_v \
+	vfslide1down_vf \
+	vfslide1up_vf \
+	vfsub_vf \
+	vfsub_vv \
+	vfwadd_vf \
+	vfwadd_vv \
+	vfwadd_wf \
+	vfwadd_wv \
+	vfwcvt_f_f_v \
+	vfwcvt_f_x_v \
+	vfwcvt_f_xu_v \
+	vfwcvt_rtz_x_f_v \
+	vfwcvt_rtz_xu_f_v \
+	vfwcvt_x_f_v \
+	vfwcvt_xu_f_v \
+	vfwmacc_vf \
+	vfwmacc_vv \
+	vfwmsac_vf \
+	vfwmsac_vv \
+	vfwmul_vf \
+	vfwmul_vv \
+	vfwnmacc_vf \
+	vfwnmacc_vv \
+	vfwnmsac_vf \
+	vfwnmsac_vv \
+	vfwredosum_vs \
+	vfwredusum_vs \
+	vfwsub_vf \
+	vfwsub_vv \
+	vfwsub_wf \
+	vfwsub_wv \
+	vmfeq_vf \
+	vmfeq_vv \
+	vmfge_vf \
+	vmfgt_vf \
+	vmfle_vf \
+	vmfle_vv \
+	vmflt_vf \
+	vmflt_vv \
+	vmfne_vf \
+	vmfne_vv \
+
+dpi_insn_ext_v_ldst = \
+	vlm_v \
+	vle8_v \
+	vle16_v \
+	vle32_v \
+	vle64_v \
+	vloxei8_v \
+	vloxei16_v \
+	vloxei32_v \
+	vloxei64_v \
+	vlse8_v \
+	vlse16_v \
+	vlse32_v \
+	vlse64_v \
+	vluxei8_v \
+	vluxei16_v \
+	vluxei32_v \
+	vluxei64_v \
+	vle8ff_v \
+	vle16ff_v \
+	vle32ff_v \
+	vle64ff_v \
+	vl1re8_v \
+	vl2re8_v \
+	vl4re8_v \
+	vl8re8_v \
+	vl1re16_v \
+	vl2re16_v \
+	vl4re16_v \
+	vl8re16_v \
+	vl1re32_v \
+	vl2re32_v \
+	vl4re32_v \
+	vl8re32_v \
+	vl1re64_v \
+	vl2re64_v \
+	vl4re64_v \
+	vl8re64_v \
+	vsm_v \
+	vse8_v \
+	vse16_v \
+	vse32_v \
+	vse64_v \
+	vsse8_v \
+	vsoxei8_v \
+	vsoxei16_v \
+	vsoxei32_v \
+	vsoxei64_v \
+	vsse16_v \
+	vsse32_v \
+	vsse64_v \
+	vsuxei8_v \
+	vsuxei16_v \
+	vsuxei32_v \
+	vsuxei64_v \
+	vs1r_v \
+	vs2r_v \
+	vs4r_v \
+	vs8r_v \
+
+dpi_insn_ext_v_ctrl = \
+	vsetivli \
+	vsetvli \
+	vsetvl \
+
+dpi_insn_ext_zvqdotq = \
+	vqdot_vv \
+	vqdot_vx \
+	vqdotu_vv \
+	vqdotu_vx \
+	vqdotsu_vv \
+	vqdotsu_vx \
+	vqdotus_vx \
+
+dpi_insn_ext_v = \
+	$(dpi_insn_ext_v_alu_fp) \
+	$(dpi_insn_ext_v_alu_int) \
+	$(dpi_insn_ext_v_ctrl) \
+	$(dpi_insn_ext_v_ldst) \
+	$(dpi_insn_ext_zvqdotq) \
+
+dpi_insn_ext_h = \
+	hfence_gvma \
+	hfence_vvma \
+	hlv_b \
+	hlv_bu \
+	hlv_h \
+	hlv_hu \
+	hlvx_hu \
+	hlv_w \
+	hlv_wu \
+	hlvx_wu \
+	hlv_d \
+	hsv_b \
+	hsv_h \
+	hsv_w \
+	hsv_d \
 
 dpi_insn_priv = \
 	csrrc \
@@ -266,79 +869,246 @@ dpi_insn_priv = \
 	sret \
 	wfi \
 
-dpi_insn_ext_v = \
-	vaaddu_vv vaaddu_vx vaadd_vv vaadd_vx vadc_vim vadc_vvm vadc_vxm \
-	vadd_vi vadd_vv vadd_vx vaesdf_vs vaesdf_vv vaesdm_vs vaesdm_vv \
-	vaesef_vs vaesef_vv vaesem_vs vaesem_vv vaeskf1_vi vaeskf2_vi vaesz_vs \
-	vandn_vv vandn_vx vand_vi vand_vv vand_vx vasubu_vv vasubu_vx \
-	vasub_vv vasub_vx vbrev8_v vbrev_v vclmulh_vv vclmulh_vx vclmul_vv \
-	vclmul_vx vclz_v vcompress_vm vcpop_m vcpop_v vctz_v vdivu_vv vdivu_vx \
-	vdiv_vv vdiv_vx vfadd_vf vfadd_vv vfbdot_vv vfclass_v vfcvt_f_xu_v \
-	vfcvt_f_x_v vfcvt_rtz_x_f_v vfcvt_rtz_xu_f_v vfcvt_x_f_v vfcvt_xu_f_v \
-	vfdiv_vf vfdiv_vv vfirst_m vfmacc_vf vfmacc_vv vfmadd_vf vfmadd_vv \
-	vfmax_vf vfmax_vv vfmerge_vfm vfmin_vf vfmin_vv vfmsac_vf vfmsac_vv \
-	vfmsub_vf vfmsub_vv vfmul_vf vfmul_vv vfmv_f_s vfmv_s_f vfmv_v_f \
-	vfncvtbf16_f_f_w vfncvt_f_f_w vfncvt_f_xu_w vfncvt_f_x_w vfncvt_rod_f_f_w \
-	vfncvt_rtz_x_f_w vfncvt_rtz_xu_f_w vfncvt_x_f_w vfncvt_xu_f_w vfnmacc_vf \
-	vfnmacc_vv vfnmadd_vf vfnmadd_vv vfnmsac_vf vfnmsac_vv vfnmsub_vf \
-	vfnmsub_vv vfrdiv_vf vfrec7_v vfredmax_vs vfredmin_vs vfredosum_vs \
-	vfredusum_vs vfrsqrt7_v vfrsub_vf vfsgnjn_vf vfsgnjn_vv vfsgnj_vf \
-	vfsgnj_vv vfsgnjx_vf vfsgnjx_vv vfslide1down_vf vfslide1up_vf vfsqrt_v \
-	vfsub_vf vfsub_vv vfwadd_vf vfwadd_vv vfwadd_wf vfwadd_wv vfwbdot_vv \
-	vfwcvtbf16_f_f_v vfwcvt_f_f_v vfwcvt_f_xu_v vfwcvt_f_x_v vfwcvt_rtz_x_f_v \
-	vfwcvt_rtz_xu_f_v vfwcvt_x_f_v vfwcvt_xu_f_v vfwldot_vv vfwmaccbf16_vf \
-	vfwmaccbf16_vv vfwmacc_vf vfwmacc_vv vfwmsac_vf vfwmsac_vv vfwmul_vf \
-	vfwmul_vv vfwnmacc_vf vfwnmacc_vv vfwnmsac_vf vfwnmsac_vv vfwredosum_vs \
-	vfwredusum_vs vfwsub_vf vfwsub_vv vfwsub_wf vfwsub_wv vghsh_vv vgmul_vv \
-	vid_v viota_m vl1re16_v vl1re32_v vl1re64_v vl1re8_v vl2re16_v vl2re32_v \
-	vl2re64_v vl2re8_v vl4re16_v vl4re32_v vl4re64_v vl4re8_v vl8re16_v \
-	vl8re32_v vl8re64_v vl8re8_v vle16ff_v vle16_v vle32ff_v vle32_v vle64ff_v \
-	vle64_v vle8ff_v vle8_v vlm_v vloxei16_v vloxei32_v vloxei64_v vloxei8_v \
-	vlse16_v vlse32_v vlse64_v vlse8_v vluxei16_v vluxei32_v vluxei64_v \
-	vluxei8_v vmacc_vv vmacc_vx vmadc_vi vmadc_vim vmadc_vv vmadc_vvm vmadc_vx \
-	vmadc_vxm vmadd_vv vmadd_vx vmand_mm vmandn_mm vmaxu_vv vmaxu_vx vmax_vv \
-	vmax_vx vmerge_vim vmerge_vvm vmerge_vxm vmfeq_vf vmfeq_vv vmfge_vf \
-	vmfgt_vf vmfle_vf vmfle_vv vmflt_vf vmflt_vv vmfne_vf vmfne_vv vminu_vv \
-	vminu_vx vmin_vv vmin_vx vmnand_mm vmnor_mm vmor_mm vmorn_mm vmsbc_vv \
-	vmsbc_vvm vmsbc_vx vmsbc_vxm vmsbf_m vmseq_vi vmseq_vv vmseq_vx vmsgtu_vi \
-	vmsgtu_vx vmsgt_vi vmsgt_vx vmsif_m vmsleu_vi vmsleu_vv vmsleu_vx vmsle_vi \
-	vmsle_vv vmsle_vx vmsltu_vv vmsltu_vx vmslt_vv vmslt_vx vmsne_vi vmsne_vv \
-	vmsne_vx vmsof_m vmulhsu_vv vmulhsu_vx vmulhu_vv vmulhu_vx vmulh_vv \
-	vmulh_vx vmul_vv vmul_vx vmv1r_v vmv2r_v vmv4r_v vmv8r_v vmv_s_x \
-	vmv_v_i vmv_v_v vmv_v_x vmv_x_s vmxnor_mm vmxor_mm vnclipu_wi vnclipu_wv \
-	vnclipu_wx vnclip_wi vnclip_wv vnclip_wx vnmsac_vv vnmsac_vx vnmsub_vv \
-	vnmsub_vx vnsra_wi vnsra_wv vnsra_wx vnsrl_wi vnsrl_wv vnsrl_wx vor_vi \
-	vor_vv vor_vx vqbdots_vv vqbdotu_vv vqdotsu_vv vqdotsu_vx \
-	vqdotus_vx vqdotu_vv vqdotu_vx vqdot_vv vqdot_vx vqldots_vv vqldotu_vv \
-	vredand_vs vredmaxu_vs vredmax_vs vredminu_vs vredmin_vs vredor_vs \
-	vredsum_vs vredxor_vs vremu_vv vremu_vx vrem_vv vrem_vx vrev8_v \
-	vrgatherei16_vv vrgather_vi vrgather_vv vrgather_vx vrol_vv vrol_vx \
-	vror_vi vror_vv vror_vx vrsub_vi vrsub_vx vs1r_v vs2r_v vs4r_v vs8r_v \
-	vsaddu_vi vsaddu_vv vsaddu_vx vsadd_vi vsadd_vv vsadd_vx vsbc_vvm vsbc_vxm \
-	vse16_v vse32_v vse64_v vse8_v vsetivli vsetvl vsetvli vsext_vf2 vsext_vf4 \
-	vsext_vf8 vsha2ch_vv vsha2cl_vv vsha2ms_vv vslide1down_vx vslide1up_vx \
-	vslidedown_vi vslidedown_vx vslideup_vi vslideup_vx vsll_vi vsll_vv vsll_vx \
-	vsm3c_vi vsm3me_vv vsm4k_vi vsm4r_vs vsm4r_vv vsmul_vv vsmul_vx vsm_v \
-	vsoxei16_v vsoxei32_v vsoxei64_v vsoxei8_v vsra_vi vsra_vv vsra_vx vsrl_vi \
-	vsrl_vv vsrl_vx vsse16_v vsse32_v vsse64_v vsse8_v vssra_vi vssra_vv \
-	vssra_vx vssrl_vi vssrl_vv vssrl_vx vssubu_vv vssubu_vx vssub_vv vssub_vx \
-	vsub_vv vsub_vx vsuxei16_v vsuxei32_v vsuxei64_v vsuxei8_v vwaddu_vv \
-	vwaddu_vx vwaddu_wv vwaddu_wx vwadd_vv vwadd_vx vwadd_wv vwadd_wx \
-	vwmaccsu_vv vwmaccsu_vx vwmaccus_vx vwmaccu_vv vwmaccu_vx vwmacc_vv \
-	vwmacc_vx vwmulsu_vv vwmulsu_vx vwmulu_vv vwmulu_vx vwmul_vv vwmul_vx \
-	vwredsumu_vs vwredsum_vs vwsll_vi vwsll_vv vwsll_vx vwsubu_vv vwsubu_vx \
-	vwsubu_wv vwsubu_wx vwsub_vv vwsub_vx vwsub_wv vwsub_wx vxor_vi vxor_vv \
-	vxor_vx vzext_vf2 vzext_vf4 vzext_vf8 \
+dpi_insn_smrnmi = \
+	mnret \
 
-# Build the complete instruction list
+dpi_insn_svinval = \
+	sfence_w_inval \
+	sfence_inval_ir \
+	sinval_vma \
+	hinval_vvma \
+	hinval_gvma \
+
+dpi_insn_ext_zcb = \
+	c_zext_b \
+	c_zext_h \
+	c_zext_w \
+	c_sext_b \
+	c_sext_h \
+	c_not \
+	c_mul \
+	c_lbu \
+	c_lhu \
+	c_lh \
+	c_sb \
+	c_sh \
+
+dpi_insn_ext_zcmp = \
+	cm_push \
+	cm_pop \
+	cm_popret \
+	cm_popretz \
+	cm_mva01s \
+	cm_mvsa01 \
+
+dpi_insn_ext_zcmt = \
+	cm_jalt \
+
+dpi_insn_ext_zce = \
+	$(dpi_insn_ext_zcb) \
+	$(dpi_insn_ext_zcmp) \
+	$(dpi_insn_ext_zcmt) \
+
+dpi_insn_ext_cmo = \
+	cbo_clean \
+	cbo_flush \
+	cbo_inval \
+	cbo_zero \
+
+dpi_insn_ext_zicond = \
+	czero_eqz \
+	czero_nez \
+
+dpi_insn_ext_zfbfmin = \
+	fcvt_bf16_s \
+	fcvt_s_bf16 \
+
+dpi_insn_ext_zvfbfmin = \
+	vfncvtbf16_f_f_w \
+	vfwcvtbf16_f_f_v \
+
+dpi_insn_ext_zvfbfwma = \
+	vfwmaccbf16_vv \
+	vfwmaccbf16_vf \
+
+dpi_insn_ext_bf16 = \
+	$(dpi_insn_ext_zfbfmin) \
+	$(dpi_insn_ext_zvfbfmin) \
+	$(dpi_insn_ext_zvfbfwma) \
+
+dpi_insn_ext_zacas = \
+	amocas_w \
+	amocas_d \
+	$(if $(HAVE_INT128),amocas_q)
+
+dpi_insn_ext_zabha = \
+	amoadd_b \
+	amoand_b \
+	amomax_b \
+	amomaxu_b \
+	amomin_b \
+	amominu_b \
+	amoor_b \
+	amoswap_b \
+	amoxor_b \
+	amocas_b \
+	amoadd_h \
+	amoand_h \
+	amomax_h \
+	amomaxu_h \
+	amomin_h \
+	amominu_h \
+	amoor_h \
+	amoswap_h \
+	amoxor_h \
+	amocas_h \
+
+dpi_insn_ext_zawrs = \
+	wrs_sto \
+	wrs_nto \
+
+dpi_insn_ext_zalasr = \
+	lb_aq \
+	lh_aq \
+	lw_aq \
+	ld_aq \
+	sb_rl \
+	sh_rl \
+	sw_rl \
+	sd_rl \
+
+dpi_insn_ext_zvbb = \
+	vandn_vv \
+	vandn_vx \
+	vbrev8_v \
+	vbrev_v \
+	vclz_v \
+	vcpop_v \
+	vctz_v \
+	vrev8_v \
+	vrol_vv \
+	vrol_vx \
+	vror_vi \
+	vror_vv \
+	vror_vx \
+	vwsll_vi \
+	vwsll_vv \
+	vwsll_vx \
+
+dpi_insn_ext_zvbc = \
+	vclmul_vv \
+	vclmul_vx \
+	vclmulh_vv \
+	vclmulh_vx \
+
+dpi_insn_ext_zvkg= \
+	vghsh_vv \
+	vgmul_vv \
+
+dpi_insn_ext_zvkned = \
+	vaesdf_vs \
+	vaesdf_vv \
+	vaesdm_vs \
+	vaesdm_vv \
+	vaesef_vs \
+	vaesef_vv \
+	vaesem_vs \
+	vaesem_vv \
+	vaeskf1_vi \
+	vaeskf2_vi \
+	vaesz_vs \
+
+# Covers both Zvknha and Zvkhnb.
+dpi_insn_ext_zvknh = \
+	vsha2cl_vv \
+	vsha2ch_vv \
+	vsha2ms_vv \
+
+dpi_insn_ext_zvksed = \
+	vsm4k_vi \
+	vsm4r_vs \
+	vsm4r_vv \
+
+dpi_insn_ext_zvksh = \
+	vsm3c_vi \
+	vsm3me_vv \
+
+dpi_insn_ext_zvbdot = \
+	vqbdotu_vv \
+	vqbdots_vv \
+	vfwbdot_vv \
+	vfbdot_vv \
+
+dpi_insn_ext_zvldot = \
+	vqldotu_vv \
+	vqldots_vv \
+	vfwldot_vv \
+
+dpi_insn_ext_zimop = \
+	mop_r_N \
+	mop_rr_N \
+
+dpi_insn_ext_zcmop = \
+	c_mop_N \
+
+dpi_insn_ext_zicfilp = \
+	lpad
+
+dpi_insn_ext_zicfiss = \
+	sspush_x1 \
+	sspush_x5 \
+	sspopchk_x1 \
+	sspopchk_x5 \
+	ssrdp \
+	ssamoswap_w \
+	ssamoswap_d \
+	c_sspush_x1 \
+	c_sspopchk_x5 \
+
+dpi_insn_ext_zvk = \
+	$(dpi_insn_ext_zvbb) \
+	$(dpi_insn_ext_zvbc) \
+	$(dpi_insn_ext_zvkg) \
+	$(dpi_insn_ext_zvkned) \
+	$(dpi_insn_ext_zvknh) \
+	$(dpi_insn_ext_zvksed) \
+	$(dpi_insn_ext_zvksh) \
+
 dpi_insn_list = \
 	$(dpi_insn_ext_i) \
-	$(dpi_insn_ext_a) \
 	$(dpi_insn_ext_c) \
 	$(dpi_insn_ext_f) \
 	$(dpi_insn_ext_d) \
-	$(dpi_insn_ext_v) \
+	$(dpi_insn_ext_m) \
+	$(dpi_insn_ext_b) \
+	$(dpi_insn_ext_a) \
+	$(if $(HAVE_INT128),$(dpi_insn_ext_v),) \
+	$(dpi_insn_ext_bf16) \
+	$(dpi_insn_ext_cmo) \
+	$(dpi_insn_ext_d_zfa) \
+	$(dpi_insn_ext_f_zfa) \
+	$(dpi_insn_ext_h) \
+	$(dpi_insn_ext_k) \
+	$(dpi_insn_ext_q) \
+	$(dpi_insn_ext_q_zfa) \
+	$(dpi_insn_ext_zacas) \
+	$(dpi_insn_ext_zabha) \
+	$(dpi_insn_ext_zawrs) \
+	$(dpi_insn_ext_zalasr) \
+	$(dpi_insn_ext_zce) \
+	$(dpi_insn_ext_zfh) \
+	$(dpi_insn_ext_zfh_zfa) \
+	$(dpi_insn_ext_zicond) \
+	$(dpi_insn_ext_zvk) \
+	$(dpi_insn_ext_zvbdot) \
+	$(dpi_insn_ext_zvldot) \
 	$(dpi_insn_priv) \
+	$(dpi_insn_smrnmi) \
+	$(dpi_insn_svinval) \
+	$(dpi_insn_ext_zimop) \
+	$(dpi_insn_ext_zcmop) \
+	$(dpi_insn_ext_zicfilp) \
+	$(dpi_insn_ext_zicfiss) \
 
 dpi_gen_srcs = $(addprefix dpi_,$(addsuffix .cc,$(dpi_insn_list)))
 

@@ -21,11 +21,11 @@ public:
   inline reg_t size() override { return mem_size; }
   void dump(std::ostream& o) override;
 
-private:
-  reg_t mem_size;
-
   void write_byte(reg_t addr, uint8_t data);
   uint8_t read_byte(reg_t addr);
+
+private:
+  reg_t mem_size;
 
   std::unordered_map<reg_t, uint8_t*> pages;
   uint8_t* get_page(reg_t page_addr);

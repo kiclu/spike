@@ -9,5 +9,5 @@ URL: https://github.com/riscv/riscv-isa-sim
 Version: @PACKAGE_VERSION@
 Requires: riscv-riscv riscv-fesvr riscv-disasm
 Libs: -L${libdir} -Wl,-rpath,${libdir} -ldpi -lriscv -lfesvr -ldisasm
-Cflags: -I${includedir}
+Cflags: -I${includedir} -DHAVE_INT128
 

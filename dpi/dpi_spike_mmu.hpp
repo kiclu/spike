@@ -16,21 +16,24 @@ public:
   template<typename T>
   T load(reg_t addr, xlate_flags_t xlate_flags = {})
   {
-    dbg_load();
+    target_endian<T> res;
+
+    if(sim->mmio_load(addr, sizeof(T), (uint8_t*)&res))
+    {
+      MMU_OBSERVE_LOAD(addr, from_target(res), sizeof(T));
+      return from_target(res);
+    }
     return 0;
   }
 
   template<typename T>
   void ALWAYS_INLINE store(reg_t addr, T val, xlate_flags_t xlate_flags = {})
   {
-    dbg_store();
+    target_endian<T> data = to_target(val);
+
+    MMU_OBSERVE_STORE(addr, val, sizeof(T));
+    sim->mmio_store(addr, sizeof(T), (uint8_t*)&data);
   }
-
-  void load_slow_path(reg_t original_addr, reg_t len, uint8_t* bytes,
-                      xlate_flags_t xlate_flags);
-
-  void dbg_load();
-  void dbg_store();
 
 };
 

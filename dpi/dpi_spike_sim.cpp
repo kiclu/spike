@@ -1,3 +1,4 @@
+#include "config.h"
 #include "dpi_spike_sim.hpp"
 
 #include <vpi_user.h>
@@ -31,14 +32,14 @@ dpi_spike_sim_t::dpi_spike_sim_t(const cfg_t* cfg, bool halted,
     procs.push_back(proc);
     harts[cfg->hartids[i]] = proc;
 
-    vpi_printf("[SPIKE][HARTID-%d] Created\n", cfg->hartids[i]);
+    vpi_printf("[SPIKE][HARTID-%2d] Created\n", cfg->hartids[i]);
 
     //procs->set_pmp_num();
     //procs->set_pmp_granularity();
     //procs->set_mmu_capability();
     proc->reset();
 
-    vpi_printf("[SPIKE][HARTID-%d] Reset\n", cfg->hartids[i]);
+    vpi_printf("[SPIKE][HARTID-%2d] Reset\n", cfg->hartids[i]);
   }
 
 }

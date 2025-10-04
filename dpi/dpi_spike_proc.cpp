@@ -1,3 +1,4 @@
+#include "config.h"
 #include "dpi_spike_proc.hpp"
 
 #include <svdpi.h>
@@ -45,8 +46,7 @@ dpi_spike_proc_t::dpi_spike_proc_t(const char* isa_str, const char* priv_str,
   reset();
 }
 
-dpi_spike_proc_t::~dpi_spike_proc_t()
-{}
+dpi_spike_proc_t::~dpi_spike_proc_t() {}
 
 void dpi_spike_proc_t::step(uint64_t addr, uint32_t insn, uint64_t* next_pc) {
   insn_fetch_t fetch = {decode_insn(insn), insn};
@@ -94,7 +94,7 @@ insn_func_t dpi_spike_proc_t::decode_insn(insn_t insn)
           );
   disasm.erase(new_end, disasm.end());
 
-  vpi_printf("[SPIKE][HARTID=%02d] Decoded instruction 0x%08lx (%s)\n",
+  vpi_printf("[SPIKE][HARTID=%2d] Decoded instruction 0x%08lx (%s)\n",
              get_id(), insn.bits(), disasm.c_str());
 
   return desc->func(xlen, rve, log_commits_enabled);
@@ -120,7 +120,7 @@ void dpi_spike_proc_t::register_base_instructions()
     extern reg_t dpi_logged_rv64i_##name(dpi_spike_proc_t*, insn_t, reg_t); \
     extern reg_t dpi_logged_rv32e_##name(dpi_spike_proc_t*, insn_t, reg_t); \
     extern reg_t dpi_logged_rv64e_##name(dpi_spike_proc_t*, insn_t, reg_t);
-  #include </home/nlukic/Projects/spike/build/insn_list.h>
+  #include "insn_list.h"
   #undef DEFINE_INSN
 
   #define DEFINE_INSN_UNCOND(name) { \
@@ -144,7 +144,7 @@ void dpi_spike_proc_t::register_base_instructions()
     name##_overlapping = true; \
     if (isa.extension_enabled(ext)) \
       DEFINE_INSN_UNCOND(name);
-  #include </home/nlukic/Projects/spike/riscv/overlap_list.h>
+  #include "../riscv/overlap_list.h"
   #undef DECLARE_OVERLAP_INSN
 
   // add all other instructions.  since they are non-overlapping, the order
@@ -153,7 +153,7 @@ void dpi_spike_proc_t::register_base_instructions()
   #define DEFINE_INSN(name) \
     if (!name##_overlapping) \
       DEFINE_INSN_UNCOND(name);
-  #include </home/nlukic/Projects/spike/build/insn_list.h>
+  #include "insn_list.h"
   #undef DEFINE_INSN
   #undef DEFINE_INSN_UNCOND
 

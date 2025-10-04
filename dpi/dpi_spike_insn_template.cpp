@@ -1,3 +1,4 @@
+#include "config.h"
 #include "dpi_spike_proc.hpp"
 #include "decode_macros.h"
 #include "arith.h"

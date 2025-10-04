@@ -7,5 +7,5 @@ Name: riscv-riscv
 Description: RISC-V
 Version: git
 Libs: -Wl,-rpath,${libdir} -L${libdir} -lriscv
-Cflags: -I${includedir}
+Cflags: -I${includedir} -DHAVE_INT128
 URL: http://riscv.org/download.html#tab_spike
